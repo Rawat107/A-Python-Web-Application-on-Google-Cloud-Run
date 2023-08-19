@@ -1,42 +1,58 @@
-from flask import Flask
+from flask import Flask, render_template, request, jsonify
+from deepface import DeepFace
+import os
 
 app = Flask(__name__)
 
-registered_faces = {
-    "male": "faces/man_face.jpg",
-    "female": "faces/female_face.jpg",
-    "crowd": "faces/crowd.jpg"
-    # Add more registered faces here
-}
-
+registered_faces = {}  # Initialize an empty dictionary
 
 @app.route('/')
-def hello():
-  return "Hello, this is the face recoginition app!"
-
+def index():
+    return render_template('index.html')
 
 @app.route('/register', methods=['POST'])
-def register_face():
-    name = request.form.get('name')
-    image_path = request.form.get('image_path')
+def register():
+    name = request.form['name']
+    image = request.files['image']
     
-    registered_faces[name] = image_path
-    return f"Face for {name} registered successfully."
+    # Build the path for saving the image in the 'uploads' folder
+    image_path = os.path.join('uploads', f'{name.lower()}.jpg')
+    image.save(image_path)
+    
+    registered_faces[name.lower()] = image_path
+    
+    return "Face registered successfully."
 
 
 @app.route('/recognize', methods=['POST'])
-def recognize_face():
-    image_path = request.form.get('image_path')
+def recognize():
+    # print("Recognize route called")
     
-    recognized = False
-    for name, registered_image_path in registered_faces.items():
-        result = DeepFace.verify(image_path, registered_image_path)
-        if result['verified']:
-            recognized = True
-            return f"Recognized: {name}"
+    image = request.files['image']
+    image_path = 'temp.jpg'
+    image.save(image_path)
     
-    if not recognized:
-        return "Face not recognized."
+    recognized_name = None
+    
+    for name, path in registered_faces.items():
+        try:
+            # print(f"Verifying {name}")
+            recognized_face = DeepFace.verify(image_path, path, enforce_detection=False)
+            print(recognized_face)
+        except ValueError as e:
+            # print(f"Error verifying {name}: {e}")
+            continue
+        
+        if recognized_face and recognized_face['verified']:
+            recognized_name = name
+            break
+    
+    if recognized_name:
+        result = f"Recognition complete: This is a picture of {recognized_name.capitalize()}."
+    else:
+        result = "Recognition failed: The face is not recognized."
+    
+    return result
 
 if __name__ == '__main__':
-  app.run(host = '0.0.0.0', port=8080)
+    app.run(debug=True, host='0.0.0.0', port=8080)
