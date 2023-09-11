@@ -14,6 +14,10 @@ def index():
 def register():
     name = request.form['name']
     image = request.files['image']
+
+    # Check if the image is already registered with the same name
+    if name.lower() in registered_faces:
+        return f"Face already registered with the name: {name}."
     
     # Build the path for saving the image in the 'uploads' folder
     image_path = os.path.join('uploads', f'{name.lower()}.jpg')
@@ -26,8 +30,6 @@ def register():
 
 @app.route('/recognize', methods=['POST'])
 def recognize():
-    # print("Recognize route called")
-    
     image = request.files['image']
     image_path = 'temp.jpg'
     image.save(image_path)
@@ -36,11 +38,8 @@ def recognize():
     
     for name, path in registered_faces.items():
         try:
-            # print(f"Verifying {name}")
             recognized_face = DeepFace.verify(image_path, path, enforce_detection=False)
-            print(recognized_face)
         except ValueError as e:
-            # print(f"Error verifying {name}: {e}")
             continue
         
         if recognized_face and recognized_face['verified']:
@@ -50,7 +49,7 @@ def recognize():
     if recognized_name:
         result = f"Recognition complete: This is a picture of {recognized_name.capitalize()}."
     else:
-        result = "Recognition failed: The face is not recognized."
+        result = f"This is an image of a person."
     
     return result
 

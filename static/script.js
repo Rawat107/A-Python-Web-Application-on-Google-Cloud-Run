@@ -1,44 +1,37 @@
 $(document).ready(function() {
-    // Register button click event
     $("#register-button").click(function() {
-        var form = $("#register-form")[0];
-        var formData = new FormData(form);
-        
+        var name = $("#name-input").val();
+        var formData = new FormData($("#register-form")[0]);
+
         $.ajax({
-            type: "POST",
-            enctype: "multipart/form-data",
             url: "/register",
+            type: "POST",
             data: formData,
-            processData: false,
             contentType: false,
-            cache: false,
-            success: function(data) {
-                $("#register-message").text(data);
+            processData: false,
+            success: function(response) {
+                $("#register-message").text(response);
             },
-            error: function(err) {
-                console.log(err);
+            error: function(error) {
+                $("#register-message").text("An error occurred during registration.");
             }
         });
     });
-    
-    // Recognize button click event
+
     $("#recognize-button").click(function() {
-        var form = $("#recognize-form")[0];
-        var formData = new FormData(form);
-        
+        var formData = new FormData($("#recognize-form")[0]);
+
         $.ajax({
-            type: "POST",
-            enctype: "multipart/form-data",
             url: "/recognize",
+            type: "POST",
             data: formData,
-            processData: false,
             contentType: false,
-            cache: false,
-            success: function(data) {
-                $("#recognize-message").text(data);
+            processData: false,
+            success: function(response) {
+                $("#recognize-message").text(response);
             },
-            error: function(err) {
-                console.log(err);
+            error: function(error) {
+                $("#recognize-message").text("An error occurred during recognition.");
             }
         });
     });
