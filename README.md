@@ -44,4 +44,4 @@ As a Python developer with knowledge of Google Cloud Platform (GCP), your task i
    b. Include instructions on how to access and test the deployed web application.
 
 
-# How to run the scripts and other details are in documentations.
+## How to run the scripts and other details are in documentations.
