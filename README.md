@@ -44,17 +44,4 @@ As a Python developer with knowledge of Google Cloud Platform (GCP), your task i
    b. Include instructions on how to access and test the deployed web application.
 
 
-## Evaluation Criteria:
-Your assignment will be evaluated based on the following criteria:
-
-1. Successful Deployment: The Python web application should be deployed on Google Cloud Run and accessible via an HTTP endpoint.
-
-2. Functionality: The web application should demonstrate the basic functionality described in the requirements along with face register and face recognition.
-
-3. Code Quality: The code for the web application should follow best coding practices, be well-structured, and maintainable.
-
-4. Containerization: The Docker container should be properly configured, allowing the web application to run correctly.
-
-5. Testing and Verification: The deployed web application should pass functional tests and handle requests appropriately.
-
-6. Documentation: The documentation should be clear, concise, and provide sufficient instructions for understanding and reproducing the deployment process.
+# How to run the scripts and other details are in documentations.
